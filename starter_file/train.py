@@ -1,3 +1,4 @@
+'''
 from sklearn.linear_model import LogisticRegression
 import argparse
 import os
@@ -6,17 +7,45 @@ import joblib
 from sklearn.model_selection import train_test_split
 import pandas as pd
 from azureml.core.run import Run
+'''
+  
+from sklearn.linear_model import LogisticRegression
+import argparse
+import os
+import numpy as np
+from sklearn.metrics import mean_squared_error
+import joblib
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder
+import pandas as pd
+from azureml.core.run import Run
 
 print("Getting run object")
 run = Run.get_context()
 
+### added test code from here
+
+def clean_data(data):
+    x_df = data
+    x_df["diagnosis"] = x_df.diagnosis.apply(lambda s: 1 if s == "M" else 0)
+    y_df = x_df.pop("diagnosis").apply(lambda s: 1 if s == "M" else 0)
+    
+    #Add return statement for this function
+    return x_df, y_df
+  
+print("Reading data from CSV file")
+df = pd.read_csv('./breast_cancer_dataset.csv')
+
+x, y = clean_data(df)
+
+'''
 print("Reading data from CSV file")
 dataframe = pd.read_csv('./breast_cancer_dataset.csv')
 x = dataframe.drop('diagnosis', axis=1)
 y = dataframe['diagnosis']
-
+'''
 print("Splitting data")
-x_train, y_train, x_test, y_test = train_test_split(x, y, test_size=0.33, random_state=0)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.33, random_state=0)
 
 
 def main():
@@ -39,7 +68,7 @@ def main():
     run.log("Max iterations:", np.int(args.max_iter))
 
     print("Calling LogisticRegression")
-    model = LogisticRegression(C=args.C, max_iter=args.max_iter).fit(x_train, y_train)
+    model = LogisticRegression(C=np.float(args.C), max_iter=np.int(args.max_iter)).fit(x_train, y_train)
 
     accuracy = model.score(x_test, y_test)
     run.log("Accuracy", np.float(accuracy))
