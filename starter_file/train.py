@@ -26,17 +26,18 @@ run = Run.get_context()
 ### added test code from here
 
 def clean_data(data):
-    x_df = data
-    x_df["diagnosis"] = x_df.diagnosis.apply(lambda s: 1 if s == "M" else 0)
+    x_df = dataset.to_pandas_dataframe()
     y_df = x_df.pop("diagnosis").apply(lambda s: 1 if s == "M" else 0)
     
     #Add return statement for this function
     return x_df, y_df
   
 print("Reading data from CSV file")
-df = pd.read_csv('./breast_cancer_dataset.csv')
+#df = pd.read_csv('./breast_cancer_dataset.csv')
+if "cancer-dataset" in ws.datasets.keys():
+    dataset = ws.datasets["cancer-dataset"]
 
-x, y = clean_data(df)
+x, y = clean_data(dataset)
 
 '''
 print("Reading data from CSV file")
