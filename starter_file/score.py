@@ -2,6 +2,8 @@ import os
 import pickle
 import json
 import joblib
+import pandas as pd
+from azureml.core.model import Model
 
 # The entry script has two required functions, init() and run(data). 
 # init() is used to initialize the service at startup and load the model  
@@ -53,8 +55,9 @@ def init():
 # Handle requests to the service
 def run(data):
     try:
-        data = json.loads(data)
-        result = model.predict(data['data'])
+        data = json.loads(data)['data']
+        data = pd.DataFrame.from_dict(data)
+        result = model.predict(data)
         return result.tolist()
     except Exception as e:
         result = str(e)
