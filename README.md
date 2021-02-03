@@ -7,59 +7,72 @@ This project is divided into 3 parts.
 * Finally we deploy the chosen model as a web service in Azure Container Instance. This service publishes a scoring URI and a primary key. We use this information to pass sample data to the web service and check if the output is as expected.
 
 ## Project Set Up and Installation
-* Download dataset CSV file from Kaggle using link https://www.kaggle.com/uciml/breast-cancer-wisconsin-data
+ Download dataset CSV file from Kaggle using link https://www.kaggle.com/uciml/breast-cancer-wisconsin-data
 * Unzip BreastCancerPrediction.zip and extract project source files
 * Start Microsoft Azure ML Studio in a browser and login using credentials provided
-* Go to Datasets tab and create a new dataset (from local file) using the CSV file with option to read column  headers from the first file
+* Go to Datasets tab and create a new dataset with following details:
+  - source : local file (choose CSV file downloaded earlier)
+  - type : Tabular
+  - name : "cancer-dataset"
+  - datastore : default
+  - select option to read column headers from the first file
 * Go to Notebooks tab and upload all source files as well as the CSV file
-* Create a compute to execute our Python notebooks
+* Create a compute to execute Python notebooks
 * Execute hyperparameter_tuning.ipynb one step at a time. In the end you will get details of the generated model with primary metric Accuracy
-* Execute automl.ipynb till the step till the step where you get details of the best model generated
-* Deploy the model with the best Accuracy. It will be deployed as a web service with authentication enabled and using Azure Container Instance and 
+* Execute automl.ipynb till the step where you get details of the best model generated
+* Deploy the model with the best Accuracy. It will be deployed as a web service with authentication enabled and using Azure Container Instance.
+* Go to endpoints tab and locate the deployed web service. Note scoring URI and primary key of the service.
+* Open file endpoint.py and replace variables scoring_uri and key using information obtained from the web service
+* Execute endpoint.py and confirm that it generates output in the form of [B] (for benign) or [M] (for malignant)
 
 ## Dataset
-
 ### Overview
-We use Breast Cancer Wisconsin (Diagnostic) dataset. This dataset is available at https://www.kaggle.com/uciml/breast-cancer-wisconsin-data 
-Features are computed from a digitized image of a fine needle aspirate (FNA) of a breast mass. They describe characteristics of the cell nuclei present in the image. A few of the images can be found at [Web Link]. Separating plane was obtained using Multisurface Method-Tree (MSM-T) [K. P. Bennett, "Decision Tree Construction Via Linear Programming." Proceedings of the 4th Midwest Artificial Intelligence and Cognitive Science Society, pp. 97-101, 1992], a classification method which uses linear programming to construct a decision tree. Relevant features were selected using an exhaustive search in the space of 1-4 features and 1-3 separating planes.
+We use Breast Cancer Wisconsin (Diagnostic) dataset. This dataset is available at https://www.kaggle.com/uciml/breast-cancer-wisconsin-data Key featue of this dataset as quoted on this website are as follows:
+"Features are computed from a digitized image of a fine needle aspirate (FNA) of a breast mass. They describe characteristics of the cell nuclei present in the image. A few of the images can be found at http://www.cs.wisc.edu/~street/images/. Separating plane was obtained using Multisurface Method-Tree (MSM-T) [K. P. Bennett, "Decision Tree Construction Via Linear Programming." Proceedings of the 4th Midwest Artificial Intelligence and Cognitive Science Society, pp. 97-101, 1992], a classification method which uses linear programming to construct a decision tree. Relevant features were selected using an exhaustive search in the space of 1-4 features and 1-3 separating planes. The actual linear program used to obtain the separating plane in the 3-dimensional space is that described in: [K. P. Bennett and O. L. Mangasarian: "Robust Linear Programming Discrimination of Two Linearly Inseparable Sets", Optimization Methods and Software 1, 1992, 23-34]." 
 
-The actual linear program used to obtain the separating plane in the 3-dimensional space is that described in: [K. P. Bennett and O. L. Mangasarian: "Robust Linear Programming Discrimination of Two Linearly Inseparable Sets", Optimization Methods and Software 1, 1992, 23-34]. 
-
-Attribute Information:
-
-1) ID number
-2) Diagnosis (M = malignant, B = benign)
-3-32)
-
-Ten real-valued features are computed for each cell nucleus:
-
-a) radius (mean of distances from center to points on the perimeter)
-b) texture (standard deviation of gray-scale values)
-c) perimeter
-d) area
-e) smoothness (local variation in radius lengths)
-f) compactness (perimeter^2 / area - 1.0)
-g) concavity (severity of concave portions of the contour)
-h) concave points (number of concave portions of the contour)
-i) symmetry
-j) fractal dimension ("coastline approximation" - 1)
-
-The mean, standard error and "worst" or largest (mean of the three
-largest values) of these features were computed for each image,
-resulting in 30 features. For instance, field 3 is Mean Radius, field
-13 is Radius SE, field 23 is Worst Radius.
-
-All feature values are recoded with four significant digits.
-
+### Attribute Information:
+* id
+* diagnosis
+* radius_mean
+* texture_mean
+* perimeter_mean
+* area_mean
+* smoothness_mean
+* compactness_mean
+* concavity_mean
+* concave points_mean
+* symmetry_mean
+* fractal_dimension_mean
+* radius_se
+* texture_se
+* perimeter_se
+* area_se
+* smoothness_se
+* compactness_se
+* concavity_se
+* concave points_se
+* symmetry_se
+* fractal_dimension_se
+* radius_worst
+* texture_worst
+* perimeter_worst
+* area_worst
+* smoothness_worst
+* compactness_worst
+* concavity_worst
+* concave points_worst
+* symmetry_worst
+* fractal_dimension_worst
+    
 Missing attribute values: none
 
 Class distribution: 357 benign, 212 malignant
 
 ### Task
-*TODO*: Explain the task you are going to be solving with this dataset and the features you will be using for it.
-We aim to predict if the given sample is benign or malignant using given information. For this purpose we use all features as they are important fot the decision. The result column is Diagnosis with two possible values : B for benign and M for malignant.
+We aim to predict if the given sample is benign or malignant using given information. For this purpose we use all features as they are important for the decision. Except Id and diagnosis, all feautures are numeric. Also there are no missing values. The result column is Diagnosis with two possible values : B for benign and M for malignant.
+
 ### Access
-*TODO*: Explain how you are accessing the data in your workspace.
+As mentioned in project setup and installation section, we download dataset CSV file from Kaggle using link https://www.kaggle.com/uciml/breast-cancer-wisconsin-data and create a new dataset named "cancer-dataset"(from local file) using the CSV file.
 
 ## Automated ML
 *TODO*: Give an overview of the `automl` settings and configuration you used for this experiment
