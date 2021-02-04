@@ -7,7 +7,7 @@ This project is divided into 3 parts.
 * Finally we deploy the chosen model as a web service in Azure Container Instance. This service publishes a scoring URI and a primary key. We use this information to pass sample data to the web service and check if the output is as expected.
 
 ## Project Set Up and Installation
- Download dataset CSV file from Kaggle using link https://www.kaggle.com/uciml/breast-cancer-wisconsin-data
+* Download dataset CSV file from Kaggle using link https://www.kaggle.com/uciml/breast-cancer-wisconsin-data
 * Unzip BreastCancerPrediction.zip and extract project source files
 * Start Microsoft Azure ML Studio in a browser and login using credentials provided
 * Go to Datasets tab and create a new dataset with following details:
@@ -27,7 +27,9 @@ This project is divided into 3 parts.
 
 ## Dataset
 ### Overview
-We use Breast Cancer Wisconsin (Diagnostic) dataset. This dataset is available at https://www.kaggle.com/uciml/breast-cancer-wisconsin-data Key featue of this dataset as quoted on this website are as follows:
+We use Breast Cancer Wisconsin (Diagnostic) dataset. This dataset is available at https://www.kaggle.com/uciml/breast-cancer-wisconsin-data 
+
+Key featue of this dataset as quoted on this website are as follows:
 "Features are computed from a digitized image of a fine needle aspirate (FNA) of a breast mass. They describe characteristics of the cell nuclei present in the image. A few of the images can be found at http://www.cs.wisc.edu/~street/images/. Separating plane was obtained using Multisurface Method-Tree (MSM-T) [K. P. Bennett, "Decision Tree Construction Via Linear Programming." Proceedings of the 4th Midwest Artificial Intelligence and Cognitive Science Society, pp. 97-101, 1992], a classification method which uses linear programming to construct a decision tree. Relevant features were selected using an exhaustive search in the space of 1-4 features and 1-3 separating planes. The actual linear program used to obtain the separating plane in the 3-dimensional space is that described in: [K. P. Bennett and O. L. Mangasarian: "Robust Linear Programming Discrimination of Two Linearly Inseparable Sets", Optimization Methods and Software 1, 1992, 23-34]." 
 
 ### Attribute Information:
@@ -78,30 +80,35 @@ As mentioned in project setup and installation section, we download dataset CSV 
 ## Automated ML
 We created a notebook automl.ipynb to take care of following:
 * Create compute cluster if not already present
+
 ![Screenshot](Screenshots/hyperdrive_computecluster.jpg)
 
 * Create and execute AutoML experiment with following configuration:
-- task = "classification"
-- training_data=dataset
-- label_column_name="diagnosis"   
-- path = project_folder
-- enable_early_stopping= True
-- featurization= 'auto'
-- experiment_timeout_minutes = 20
-- max_concurrent_iterations = 5
-- primary_metric = 'accuracy'
+  - task = "classification"
+  - training_data=dataset
+  - label_column_name="diagnosis"   
+  - path = project_folder
+  - enable_early_stopping= True
+  - featurization= 'auto'
+  - experiment_timeout_minutes = 20
+  - max_concurrent_iterations = 5
+  - primary_metric = 'accuracy'
 
 * Track the progress of the experiment using RunDetails widget
+
 ![Screenshot](Screenshots/automl_rundetails_nb_completed.jpg)
 
 * Find out the best model created by AutoML and register it
+
 ![Screenshot](Screenshots/automl_completed_studio.jpg)
 
 ### Results
 AutoML experiment generated a number of models.
+
 ![Screenshot](Screenshots/automl_models1.jpg)
 
 The best model generated was VotingEnsemble with Accuracy 0.98597
+
 ![Screenshot](Screenshots/automl_bestmodel.jpg)
 
 VotingEnsamble is an ensamble learning model. Creating ensembles can improve machine learning results by combining multiple iterations that may provide better predictions compared to a single iteration. VotingEnsamble is applicable to classification as well as regression. In case of classification it uses weighted average of predicted class probabilities. In case of regression it uses weighted average of predicted regression targets. Our current task needs prediction using classification. VotingEnsamble in Azure AutoML uses soft voting which provides prediction probability as weighted average of prediction probabilities of each model used in ensamble.
@@ -131,19 +138,24 @@ Initially we created a training script train.py that takes Regularization Streng
 
 Then we created a notebook hyperparameter_tuning.ipynb to take care of following:
 * Create compute cluster if not already present
+
 ![Screenshot](Screenshots/hyperdrive_computecluster.jpg)
 
 * Create and execute HyperDrive experiment with primary metric value "Accuracy" to tune hyperparameters using HyperDriveConfig that supplies training script along with other parameters
+
 ![Screenshot](Screenshots/hyperdrive_rundetails_studio.jpg)
 
 * Track the progress of the experiment using RunDetails widget
+
 ![Screenshot](Screenshots/hyperdrive_rundetails_nb.jpg)
 
 * Find out the best model created by HyperDrive and register it
+
 ![Screenshot](Screenshots/hyperdrive_run——completed.jpg)
 
 ### Results
 HyperDrive run created a number of models with primary metric accuracy as follows:
+
 ![Screenshot](Screenshots/hyperdrive_accuracy1.jpg)
 
 ![Screenshot](Screenshots/hyperdrive_accuracy2.jpg)
@@ -155,8 +167,8 @@ We can do following improvements to hyperparameter tuning:
 * Choose a different classification model like Decision Tree, K-nearest Neighbors (KNN) etc. 
 * Choose a different early termination policy like Bandit Policy 
 * Choose a different sampling method. e.g.
-- Do an initial search with Random Sampling and then refine the search space to improve results
-- Use Bayesian sampling
+  - Do an initial search with Random Sampling and then refine the search space to improve results
+  - Use Bayesian sampling
 
 ## Model Deployment
 *TODO*: Give an overview of the deployed model and instructions on how to query the endpoint with a sample input.
