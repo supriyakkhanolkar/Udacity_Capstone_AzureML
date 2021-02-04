@@ -76,44 +76,42 @@ As mentioned in project setup and installation section, we download dataset CSV 
 ![Screenshot](Screenshots/Registered_dataset.jpg)
 
 ## Automated ML
-We create and execute an AutoML experiment for this task. The details of configuration used for this experiment are as follows :
-* task = "classification"
-* training_data=dataset
-* label_column_name="diagnosis"   
-* path = project_folder
-* enable_early_stopping= True
-* featurization= 'auto'
-* experiment_timeout_minutes = 20
-* max_concurrent_iterations = 5
-* primary_metric = 'accuracy'
-
-### Results
-AutoML experiment was executed using Python notebook. 
-Initially a compute cluster was created or reused if already present.
+We created a notebook automl.ipynb to take care of following:
+* Create compute cluster if not already present
 ![Screenshot](Screenshots/hyperdrive_computecluster.jpg)
 
-The progress of AutoML was tracked using RunDetails widget.
+* Create and execute AutoML experiment with following configuration:
+- task = "classification"
+- training_data=dataset
+- label_column_name="diagnosis"   
+- path = project_folder
+- enable_early_stopping= True
+- featurization= 'auto'
+- experiment_timeout_minutes = 20
+- max_concurrent_iterations = 5
+- primary_metric = 'accuracy'
+
+* Track the progress of the experiment using RunDetails widget
 ![Screenshot](Screenshots/automl_rundetails_nb_completed.jpg)
 
-Upon completion it generated a number of models.
+* Find out the best model created by AutoML and register it
 ![Screenshot](Screenshots/automl_completed_studio.jpg)
+
+### Results
+AutoML experiment generated a number of models.
 ![Screenshot](Screenshots/automl_models1.jpg)
 
 The best model generated was VotingEnsemble with Accuracy 0.98597
 ![Screenshot](Screenshots/automl_bestmodel.jpg)
 
-## Hyperparameter Tuning
-We used Logistic Regression Scikit-learn model for the experiment of hyperparameter tuning. Logistic Regression is a type of classification model. It is easy to configure.
-First we created a training script train.py that takes Regularization Strength and Max Iterationsas input. It takes care of following tasks:
-* Get data from the dataset "cancer-dataset" that is already registered
-* Split the dataset into test and train data
-* Call scikit-learn LogisticRegression using given values of Regularization Strength and Max Iterations
-* Create model file
+VotingEnsamble is an ensamble learning model. Creating ensembles can improve machine learning results by combining multiple iterations that may provide better predictions compared to a single iteration. VotingEnsamble is applicable to classification as well as regression. In case of classification it uses weighted average of predicted class probabilities. In case of regression it uses weighted average of predicted regression targets. Our current task needs prediction using classification. VotingEnsamble in Azure AutoML uses soft voting which provides prediction probability as weighted average of prediction probabilities of each model used in ensamble.
 
-Then we created a notebook hyperparameter_tuning.ipynb to take care of following:
-* Create compute cluster if not already present
-* Create and execute HyperDrive experiment with primary metric value "Accuracy" to tune hyperparameters using HyperDriveConfig that supplies training script along with other parameters
-* Find out the best model created by HyperDrive and register it
+### Future Work
+We can do following improvements to AutoML experiment:
+* Configure the experiment to generatee model explanations. These can be used to find out top K features that affect the result
+
+## Hyperparameter Tuning
+We used Logistic Regression Scikit-learn model for the experiment of hyperparameter tuning. Logistic Regression is a type of classification model. It is easy to implement and efficient to train. It makes no assumptions about distribution of classes in feature space. It provides good accuracy for simple datasets. It is less inclined to overfitting, but it can overfit in high dimensional datasets. Also, it is tough to obtain complex relationships using Logistic Regression.
 
 We chose following hyperparameters to be tuned:
 * Regularization Strength 
@@ -125,10 +123,40 @@ We chose Random Parameter Sampling for following reasons:
 
 We chose Median Stopping Policy for early stopping. It is an early stopping policy based on running averages of primary metrics reported by the runs. This policy computes running averages across all training runs and terminates runs with primary metric values worse than the median of averages.
 
-### Results
-*TODO*: What are the results you got with your model? What were the parameters of the model? How could you have improved it?
+Initially we created a training script train.py that takes Regularization Strength and Max Iterations as input. It takes care of following tasks:
+* Get data from the dataset "cancer-dataset" that is already registered
+* Split the dataset into test and train data
+* Call scikit-learn LogisticRegression using given values of Regularization Strength and Max Iterations
+* Create model file
 
-*TODO* Remeber to provide screenshots of the `RunDetails` widget as well as a screenshot of the best model trained with it's parameters.
+Then we created a notebook hyperparameter_tuning.ipynb to take care of following:
+* Create compute cluster if not already present
+![Screenshot](Screenshots/hyperdrive_computecluster.jpg)
+
+* Create and execute HyperDrive experiment with primary metric value "Accuracy" to tune hyperparameters using HyperDriveConfig that supplies training script along with other parameters
+![Screenshot](Screenshots/hyperdrive_rundetails_studio.jpg)
+
+* Track the progress of the experiment using RunDetails widget
+![Screenshot](Screenshots/hyperdrive_rundetails_nb.jpg)
+
+* Find out the best model created by HyperDrive and register it
+![Screenshot](Screenshots/hyperdrive_run——completed.jpg)
+
+### Results
+HyperDrive run created a number of models with primary metric accuracy as follows:
+![Screenshot](Screenshots/hyperdrive_accuracy1.jpg)
+
+![Screenshot](Screenshots/hyperdrive_accuracy2.jpg)
+
+As can be seen, the best model had Accuracy = 0.64361702 with Regularization Strength (C) = 3.67397699 and Max Iterations = 7.
+
+### Future Work
+We can do following improvements to hyperparameter tuning:
+* Choose a different classification model like Decision Tree, K-nearest Neighbors (KNN) etc. 
+* Choose a different early termination policy like Bandit Policy 
+* Choose a different sampling method. e.g.
+- Do an initial search with Random Sampling and then refine the search space to improve results
+- Use Bayesian sampling
 
 ## Model Deployment
 *TODO*: Give an overview of the deployed model and instructions on how to query the endpoint with a sample input.
