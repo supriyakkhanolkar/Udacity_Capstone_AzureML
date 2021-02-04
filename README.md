@@ -200,10 +200,9 @@ Output of endpoint.py after calling web service using above information
 ![Screenshot](Screenshots/endpoint_output.jpg)
 
 ## Screen Recording
-*TODO* Provide a link to a screen recording of the project in action. Remember that the screencast should demonstrate:
-- A working model
-- Demo of the deployed  model
-- Demo of a sample request sent to the endpoint and its response
+Video of screenshots and screen recordings of this project is available at the following URL:
+
+https://youtu.be/PresMn7hJTM
 
 ## Future Work
 We can do following improvements to our experiment:
