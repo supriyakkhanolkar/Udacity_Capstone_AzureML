@@ -76,46 +76,6 @@ We aim to predict if the given sample is benign or malignant using given informa
 As mentioned in project setup and installation section, we download dataset CSV file from Kaggle using link https://www.kaggle.com/uciml/breast-cancer-wisconsin-data and create a new dataset named "cancer-dataset"(from local file) using the CSV file.
 ![Screenshot](Screenshots/Registered_dataset.jpg)
 
-## Automated ML
-We created a notebook automl.ipynb to take care of following:
-* Create compute cluster if not already present
-
-![Screenshot](Screenshots/hyperdrive_computecluster.jpg)
-
-* Create and execute AutoML experiment with following configuration:
-  - task = "classification"
-  - training_data=dataset
-  - label_column_name="diagnosis"   
-  - path = project_folder
-  - enable_early_stopping= True
-  - featurization= 'auto'
-  - experiment_timeout_minutes = 20
-  - max_concurrent_iterations = 5
-  - primary_metric = 'accuracy'
-
-* Track the progress of the experiment using RunDetails widget
-
-![Screenshot](Screenshots/automl_rundetails_nb_completed.jpg)
-
-* Find out the best model created by AutoML and register it
-
-![Screenshot](Screenshots/automl_completed_studio.jpg)
-
-### Results
-AutoML experiment generated a number of models.
-
-![Screenshot](Screenshots/automl_models1.jpg)
-
-The best model generated was VotingEnsemble with Accuracy 0.98597
-
-![Screenshot](Screenshots/automl_bestmodel.jpg)
-
-VotingEnsamble is an ensamble learning model. Creating ensembles can improve machine learning results by combining multiple iterations that may provide better predictions compared to a single iteration. VotingEnsamble is applicable to classification as well as regression. In case of classification it uses weighted average of predicted class probabilities. In case of regression it uses weighted average of predicted regression targets. Our current task needs prediction using classification. VotingEnsamble in Azure AutoML uses soft voting which provides prediction probability as weighted average of prediction probabilities of each model used in ensamble.
-
-### Future Work
-We can do following improvements to AutoML experiment:
-* Configure the experiment to generatee model explanations. These can be used to find out top K features that affect the result
-
 ## Hyperparameter Tuning
 We used Logistic Regression Scikit-learn model for the experiment of hyperparameter tuning. Logistic Regression is a type of classification model. It is easy to implement and efficient to train. It makes no assumptions about distribution of classes in feature space. It provides good accuracy for simple datasets. It is less inclined to overfitting, but it can overfit in high dimensional datasets. Also, it is tough to obtain complex relationships using Logistic Regression.
 
@@ -144,7 +104,7 @@ Then we created a notebook hyperparameter_tuning.ipynb to take care of following
 
 ![Screenshot](Screenshots/hyperdrive_rundetails_studio.jpg)
 
-* Track the progress of the experiment using RunDetails widget
+* Track progress of the experiment using RunDetails widget
 
 ![Screenshot](Screenshots/hyperdrive_rundetails_nb.jpg)
 
@@ -169,6 +129,46 @@ We can do following improvements to hyperparameter tuning:
   - Do an initial search with Random Sampling and then refine the search space to improve results
   - Use Bayesian sampling
 
+## Automated ML
+We created a notebook automl.ipynb to take care of following:
+* Create compute cluster if not already present
+
+![Screenshot](Screenshots/hyperdrive_computecluster.jpg)
+
+* Create and execute AutoML experiment with following configuration:
+  - task = "classification"
+  - training_data=dataset
+  - label_column_name="diagnosis"   
+  - path = project_folder
+  - enable_early_stopping= True
+  - featurization= 'auto'
+  - experiment_timeout_minutes = 20
+  - max_concurrent_iterations = 5
+  - primary_metric = 'accuracy'
+
+* Track progress of the experiment using RunDetails widget
+
+![Screenshot](Screenshots/automl_rundetails_nb_completed.jpg)
+
+* Find out the best model created by AutoML and register it
+
+![Screenshot](Screenshots/automl_completed_studio.jpg)
+
+### Results
+AutoML experiment generated a number of models.
+
+![Screenshot](Screenshots/automl_models1.jpg)
+
+The best model generated was VotingEnsemble with Accuracy 0.98597
+
+![Screenshot](Screenshots/automl_bestmodel.jpg)
+
+VotingEnsamble is an ensamble learning model. Creating ensembles can improve machine learning results by combining multiple iterations that may provide better predictions compared to a single iteration. VotingEnsamble is applicable to classification as well as regression. In case of classification it uses weighted average of predicted class probabilities. In case of regression it uses weighted average of predicted regression targets. Our current task needs prediction using classification. VotingEnsamble in Azure AutoML uses soft voting which provides prediction probability as weighted average of prediction probabilities of each model used in ensamble.
+
+### Future Work
+We can do following improvements to AutoML experiment:
+* Configure the experiment to generatee model explanations. These can be used to find out top K features that affect the result
+
 ## Model Deployment
 Based on Accuracy, VotingEnsemble model generated by AutoML is better than LogisticRegression model tuned using HyperDrive. This model needs to be deployed. We add code to notebook automl.ipynb to take care of following:
 
@@ -180,7 +180,7 @@ Based on Accuracy, VotingEnsemble model generated by AutoML is better than Logis
 
 ![Screenshot](Screenshots/service_deployed_nb.jpg)
 
-* Test web service using scoring URI by passing sample data
+* Test web service using sample data
 
 ![Screenshot](Screenshots/test_service_nb.jpg)
 
@@ -204,3 +204,10 @@ Output of endpoint.py after calling web service using above information
 - A working model
 - Demo of the deployed  model
 - Demo of a sample request sent to the endpoint and its response
+
+## Future Work
+We can do following improvements to our experiment:
+* Enable logging
+* Enable Swagger documentation
+* Convert model to ONNX format
+* Deploy model to Edge using Azure IoT Edge
