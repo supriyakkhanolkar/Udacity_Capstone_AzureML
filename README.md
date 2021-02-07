@@ -136,7 +136,7 @@ We can do following improvements to hyperparameter tuning:
 We created a notebook automl.ipynb to take care of following:
 * Create compute cluster if not already present
 
-![Screenshot](Screenshots/hyperdrive_computecluster.jpg)
+![Screenshot](Screenshots/new_compute_cluster.jpg)
 
 * Create and execute AutoML experiment with following configuration:
   - task = "classification"
@@ -157,12 +157,11 @@ We created a notebook automl.ipynb to take care of following:
 
 ![Screenshot](Screenshots/automl_bestmodel_withid.jpg)
 
-![Screenshot](Screenshots/automl_completed_studio.jpg)
 
 ### Results
 AutoML experiment generated a number of models.
 
-![Screenshot](Screenshots/automl_allmodels1.jpg)
+![Screenshot](Screenshots/automl_allmodels.jpg)
 
 ![Screenshot](Screenshots/automl_allmodels2.jpg)
 
@@ -212,7 +211,7 @@ Deployed web service can be found in Endpoints section of Azure ML Studio.
 
 Rest Endpoint (scoring URI) and Primary Key of the web service
 
-![Screenshot](Screenshots/new_service3.jpg)
+![Screenshot](Screenshots/new_service_consume.jpg)
 
 Output of endpoint.py after calling web service using above information
 
