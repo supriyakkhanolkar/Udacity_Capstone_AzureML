@@ -165,7 +165,7 @@ AutoML experiment generated a number of models.
 
 ![Screenshot](Screenshots/automl_allmodels2.jpg)
 
-The best model generated was VotingEnsemble with Accuracy 0.98597
+The best model generated was VotingEnsemble with Accuracy 0.99117
 
 ![Screenshot](Screenshots/automl_bestmodel.jpg)
 
