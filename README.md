@@ -265,7 +265,7 @@ Output of endpoint.py that sends HTTP Post request to the web service using samp
 ## Screen Recording
 Video of screenshots and screen recordings of this project is available at the following URL:
 
-https://youtu.be/PresMn7hJTM
+https://youtu.be/1Qb_k855C54
 
 ## Future Work
 We can do following improvements to our experiment:
