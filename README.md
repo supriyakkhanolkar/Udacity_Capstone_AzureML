@@ -258,7 +258,7 @@ Rest Endpoint (scoring URI) and Primary Key of the web service
 
 ![Screenshot](Screenshots/new_service_consume.jpg)
 
-Output of endpoint.py after calling web service using above information
+Output of endpoint.py that sends HTTP Post request to the web service using sample data along with given Scoring URI and Key
 
 ![Screenshot](Screenshots/endpoint_output.jpg)
 
